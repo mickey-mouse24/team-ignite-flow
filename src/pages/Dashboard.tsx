@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { InitiativeCard } from "@/components/initiatives/InitiativeCard";
+import { TeamChat } from "@/components/chat/TeamChat";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -179,49 +180,66 @@ export default function Dashboard() {
           </TabsContent>
         </Tabs>
 
-        {/* Activity Timeline */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Activité récente</CardTitle>
-            <CardDescription>Suivez l'évolution des projets en temps réel</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {[
-                { 
-                  user: "Marie Dupont", 
-                  action: "a commenté sur", 
-                  target: "Dashboard analytique", 
-                  time: "Il y a 5 minutes" 
-                },
-                { 
-                  user: "Thomas Martin", 
-                  action: "a approuvé", 
-                  target: "Système de mentorat", 
-                  time: "Il y a 1 heure" 
-                },
-                { 
-                  user: "Sophie Bernard", 
-                  action: "a mis à jour le statut de", 
-                  target: "Migration cloud", 
-                  time: "Il y a 2 heures" 
-                },
-              ].map((activity, index) => (
-                <div key={index} className="flex items-center gap-4 pb-4 last:pb-0 border-b last:border-0">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
-                  <div className="flex-1">
-                    <p className="text-sm">
-                      <span className="font-medium">{activity.user}</span>
-                      {" "}{activity.action}{" "}
-                      <span className="font-medium text-primary">{activity.target}</span>
-                    </p>
-                    <p className="text-xs text-muted-foreground">{activity.time}</p>
+        {/* Activity Timeline and Chat */}
+        <div className="grid gap-8 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Activité récente</CardTitle>
+              <CardDescription>Suivez l'évolution des projets en temps réel</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  { 
+                    user: "Marie Dupont", 
+                    action: "a commenté sur", 
+                    target: "Dashboard analytique", 
+                    time: "Il y a 5 minutes" 
+                  },
+                  { 
+                    user: "Thomas Martin", 
+                    action: "a approuvé", 
+                    target: "Système de mentorat", 
+                    time: "Il y a 1 heure" 
+                  },
+                  { 
+                    user: "Sophie Bernard", 
+                    action: "a mis à jour le statut de", 
+                    target: "Migration cloud", 
+                    time: "Il y a 2 heures" 
+                  },
+                  {
+                    user: "Lucas Petit",
+                    action: "a rejoint",
+                    target: "Projet refonte UX",
+                    time: "Il y a 3 heures"
+                  },
+                  {
+                    user: "Emma Richard",
+                    action: "a créé",
+                    target: "Initiative formation Q1",
+                    time: "Il y a 4 heures"
+                  }
+                ].map((activity, index) => (
+                  <div key={index} className="flex items-center gap-4 pb-4 last:pb-0 border-b last:border-0">
+                    <div className="h-2 w-2 rounded-full bg-primary" />
+                    <div className="flex-1">
+                      <p className="text-sm">
+                        <span className="font-medium">{activity.user}</span>
+                        {" "}{activity.action}{" "}
+                        <span className="font-medium text-primary">{activity.target}</span>
+                      </p>
+                      <p className="text-xs text-muted-foreground">{activity.time}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Team Chat */}
+          <TeamChat />
+        </div>
       </main>
     </div>
   );
