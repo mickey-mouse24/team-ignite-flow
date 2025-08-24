@@ -112,62 +112,114 @@ export default function Initiatives() {
           </div>
           
           <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="gradient" size="lg" className="gap-2">
-                <Plus className="h-4 w-4" />
-                Nouvelle initiative
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>Proposer une nouvelle initiative</DialogTitle>
-                <DialogDescription>
-                  Partagez votre idée pour améliorer notre entreprise
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 mt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Titre de l'initiative</Label>
-                  <Input id="title" placeholder="Ex: Amélioration du processus de..." />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="category">Catégorie</Label>
-                  <Select>
-                    <SelectTrigger id="category">
-                      <SelectValue placeholder="Sélectionnez une catégorie" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="rh">Ressources Humaines</SelectItem>
-                      <SelectItem value="tech">Technologie</SelectItem>
-                      <SelectItem value="formation">Formation</SelectItem>
-                      <SelectItem value="marketing">Marketing</SelectItem>
-                      <SelectItem value="operations">Opérations</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea 
-                    id="description" 
-                    placeholder="Décrivez votre initiative en détail..."
-                    className="min-h-[150px]"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="objectives">Objectifs</Label>
-                  <Textarea 
-                    id="objectives" 
-                    placeholder="Quels sont les objectifs de cette initiative?"
-                    className="min-h-[100px]"
-                  />
-                </div>
-                <div className="flex justify-end gap-2">
-                  <Button variant="outline">Annuler</Button>
-                  <Button variant="gradient">Soumettre l'initiative</Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+  <DialogTrigger asChild>
+    <Button variant="gradient" size="lg" className="gap-2">
+      <Plus className="h-4 w-4" />
+      Nouvelle initiative
+    </Button>
+  </DialogTrigger>
+
+  <DialogContent className="w-full max-w-3xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl max-h-[80vh] overflow-auto p-4 sm:p-6">
+    <DialogHeader>
+      <DialogTitle>Proposer une nouvelle initiative</DialogTitle>
+      <DialogDescription>
+        Partagez votre idée pour améliorer l’entreprise. Les champs avec * sont obligatoires.
+      </DialogDescription>
+    </DialogHeader>
+
+    <form className="space-y-6 mt-4 w-full" onSubmit={(e) => { e.preventDefault(); /* appel API */ }}>
+      <div className="space-y-2 w-full">
+        <Label htmlFor="title">Titre de l'initiative *</Label>
+        <Input id="title" placeholder="Ex: Optimisation du processus de recrutement" className="w-full" required />
+      </div>
+
+      <div className="space-y-2 w-full">
+        <Label htmlFor="category">Catégorie *</Label>
+        <Select required className="w-full">
+          <SelectTrigger id="category" className="w-full">
+            <SelectValue placeholder="Sélectionnez une catégorie" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="rh">Ressources Humaines</SelectItem>
+            <SelectItem value="tech">Technologie</SelectItem>
+            <SelectItem value="formation">Formation</SelectItem>
+            <SelectItem value="marketing">Marketing</SelectItem>
+            <SelectItem value="operations">Opérations</SelectItem>
+            <SelectItem value="developpement">Développement durable</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2 w-full">
+        <Label htmlFor="description">Description détaillée *</Label>
+        <Textarea
+          id="description"
+          placeholder="Décrivez votre initiative en détail..."
+          className="min-h-[150px] w-full"
+          required
+        />
+      </div>
+
+      <div className="space-y-2 w-full">
+        <Label htmlFor="objectives">Objectifs principaux *</Label>
+        <Textarea
+          id="objectives"
+          placeholder="Quels résultats attendez-vous ?"
+          className="min-h-[100px] w-full"
+          required
+        />
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="space-y-2 flex-1">
+          <Label htmlFor="owner">Responsable proposé *</Label>
+          <Input id="owner" placeholder="Ex: Département RH ou Nom du collaborateur" className="w-full" required />
+        </div>
+
+        <div className="space-y-2 flex-1">
+          <Label htmlFor="deadline">Échéance *</Label>
+          <Input type="date" id="deadline" className="w-full" required />
+        </div>
+      </div>
+
+      <div className="space-y-2 w-full">
+        <Label htmlFor="resources">Ressources nécessaires</Label>
+        <Textarea
+          id="resources"
+          placeholder="Budget, équipe, outils, etc."
+          className="min-h-[80px] w-full"
+        />
+      </div>
+
+      <div className="space-y-2 w-full">
+        <Label htmlFor="kpi">Indicateurs de succès (KPI)</Label>
+        <Textarea
+          id="kpi"
+          placeholder="Ex: réduction de 20% du temps de traitement, satisfaction employé > 90%"
+          className="min-h-[80px] w-full"
+        />
+      </div>
+
+      <div className="space-y-2 w-full">
+        <Label htmlFor="attachments">Pièces jointes</Label>
+        <Input
+          type="file"
+          id="attachments"
+          multiple
+          accept=".pdf,.doc,.docx,.xlsx,.png,.jpg,.jpeg"
+          className="w-full"
+        />
+        <p className="text-xs text-muted-foreground">Formats supportés : PDF, Word, Excel, images</p>
+      </div>
+
+      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t">
+        <Button variant="outline" className="w-full sm:w-auto">Annuler</Button>
+        <Button variant="gradient" type="submit" className="w-full sm:w-auto">Soumettre l'initiative</Button>
+      </div>
+    </form>
+  </DialogContent>
+</Dialog>
+
         </div>
 
         {/* Filters */}

@@ -141,7 +141,109 @@ export default function Projects() {
               Gérez et suivez l'avancement de tous les projets en cours
             </p>
           </div>
-          <Button variant="gradient">Nouveau projet</Button>
+          <Dialog>
+  <DialogTrigger asChild>
+    <Button
+      variant="gradient"
+      size="lg"
+      className="gap-2 w-full sm:w-auto flex justify-center items-center"
+    >
+      <Plus className="h-4 w-4" />
+      Nouveau projet
+    </Button>
+  </DialogTrigger>
+
+  <DialogContent className="w-full max-w-3xl sm:max-w-2xl md:max-w-3xl lg:max-w-4xl max-h-[80vh] overflow-auto p-4 sm:p-6">
+    <DialogHeader>
+      <DialogTitle>Créer un nouveau projet</DialogTitle>
+      <DialogDescription>
+        Remplissez les informations ci-dessous pour lancer un nouveau projet.
+      </DialogDescription>
+    </DialogHeader>
+
+    <form className="space-y-6 mt-4 w-full" onSubmit={(e) => { e.preventDefault(); /* appel API */ }}>
+      
+      {/* Nom du projet */}
+      <div className="space-y-2 w-full">
+        <Label htmlFor="projectName">Nom du projet *</Label>
+        <Input
+          id="projectName"
+          placeholder="Ex: Développement plateforme interne"
+          className="w-full"
+          required
+        />
+      </div>
+
+      {/* Description */}
+      <div className="space-y-2 w-full">
+        <Label htmlFor="projectDescription">Description *</Label>
+        <Textarea
+          id="projectDescription"
+          placeholder="Décrivez le projet en détail..."
+          className="min-h-[150px] w-full"
+          required
+        />
+      </div>
+
+      {/* Responsable et équipe */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="space-y-2 flex-1">
+          <Label htmlFor="projectOwner">Responsable *</Label>
+          <Input
+            id="projectOwner"
+            placeholder="Ex: Chef de projet ou Département"
+            className="w-full"
+            required
+          />
+        </div>
+        <div className="space-y-2 flex-1">
+          <Label htmlFor="teamMembers">Équipe</Label>
+          <Input
+            id="teamMembers"
+            placeholder="Ajouter les membres de l'équipe"
+            className="w-full"
+          />
+        </div>
+      </div>
+
+      {/* Deadline */}
+      <div className="space-y-2 w-full">
+        <Label htmlFor="projectDeadline">Échéance *</Label>
+        <Input type="date" id="projectDeadline" className="w-full" required />
+      </div>
+
+      {/* Ressources */}
+      <div className="space-y-2 w-full">
+        <Label htmlFor="projectResources">Ressources nécessaires</Label>
+        <Textarea
+          id="projectResources"
+          placeholder="Budget, outils, matériel..."
+          className="min-h-[80px] w-full"
+        />
+      </div>
+
+      {/* Pièces jointes */}
+      <div className="space-y-2 w-full">
+        <Label htmlFor="projectAttachments">Pièces jointes</Label>
+        <Input
+          type="file"
+          id="projectAttachments"
+          multiple
+          accept=".pdf,.doc,.docx,.xlsx,.png,.jpg,.jpeg"
+          className="w-full"
+        />
+        <p className="text-xs text-muted-foreground">Formats supportés : PDF, Word, Excel, images</p>
+      </div>
+
+      {/* Boutons */}
+      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t">
+        <Button variant="outline" className="w-full sm:w-auto">Annuler</Button>
+        <Button variant="gradient" type="submit" className="w-full sm:w-auto">Créer le projet</Button>
+      </div>
+    </form>
+  </DialogContent>
+</Dialog>
+
         </div>
 
         {/* Overview Stats */}
