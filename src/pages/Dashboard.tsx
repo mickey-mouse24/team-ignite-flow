@@ -21,7 +21,7 @@ const mockInitiatives = [
     title: "Amélioration du processus de recrutement",
     description: "Optimiser notre pipeline de recrutement en intégrant des outils d'IA pour le tri des CV et l'évaluation initiale des candidats.",
     author: {
-      name: "Marie Dupont",
+      name: "daouda sarr",
       role: "Responsable RH",
       avatar: undefined
     },
@@ -37,7 +37,7 @@ const mockInitiatives = [
     title: "Mise en place d'un système de mentorat",
     description: "Créer un programme de mentorat pour favoriser le développement professionnel et le partage de connaissances entre les équipes.",
     author: {
-      name: "Thomas Martin",
+      name: "daouda sarr",
       role: "Lead Developer",
       avatar: undefined
     },
@@ -53,7 +53,7 @@ const mockInitiatives = [
     title: "Dashboard analytique temps réel",
     description: "Développer un tableau de bord centralisé pour visualiser les KPIs de tous les départements en temps réel.",
     author: {
-      name: "Sophie Bernard",
+      name: "daouda sarr",
       role: "Data Analyst",
       avatar: undefined
     },
@@ -80,10 +80,11 @@ export default function Dashboard() {
             <p className="text-primary-foreground/90 mb-4">
               Suivez les initiatives, collaborez avec votre équipe et transformez vos idées en projets concrets.
             </p>
-            <Button variant="secondary" size="lg" className="gap-2">
-              Proposer une initiative
-              <ArrowRight className="h-4 w-4" />
-            </Button>
+                <Button variant="secondary" size="lg" className="gap-2">
+                  Proposer une initiative
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+            
           </div>
           <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-accent opacity-20 blur-3xl" />
         </div>
@@ -191,31 +192,31 @@ export default function Dashboard() {
               <div className="space-y-4">
                 {[
                   { 
-                    user: "Marie Dupont", 
+                    user: "daouda", 
                     action: "a commenté sur", 
                     target: "Dashboard analytique", 
                     time: "Il y a 5 minutes" 
                   },
                   { 
-                    user: "Thomas Martin", 
+                    user: "daouda", 
                     action: "a approuvé", 
                     target: "Système de mentorat", 
                     time: "Il y a 1 heure" 
                   },
                   { 
-                    user: "Sophie Bernard", 
+                    user: "daouda", 
                     action: "a mis à jour le statut de", 
                     target: "Migration cloud", 
                     time: "Il y a 2 heures" 
                   },
                   {
-                    user: "Lucas Petit",
+                    user: "daouda",
                     action: "a rejoint",
                     target: "Projet refonte UX",
                     time: "Il y a 3 heures"
                   },
                   {
-                    user: "Emma Richard",
+                    user: "daouda",
                     action: "a créé",
                     target: "Initiative formation Q1",
                     time: "Il y a 4 heures"

@@ -175,7 +175,7 @@ export default function Login() {
                     <Link to="#" className="text-primary hover:underline">
                       conditions d'utilisation
                     </Link>
-                  </Label>
+                  </Label>x
                 </div>
               </CardContent>
               <CardFooter>

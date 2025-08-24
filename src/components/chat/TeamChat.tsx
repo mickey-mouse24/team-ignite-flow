@@ -32,14 +32,14 @@ const mockChannels: Channel[] = [
   { id: "2", name: "tech", type: "public", unread: 0, lastMessage: "Code review terminée", members: 45 },
   { id: "3", name: "marketing", type: "public", unread: 1, lastMessage: "Campagne Q4 validée", members: 23 },
   { id: "4", name: "projet-cloud", type: "private", unread: 5, lastMessage: "Migration en cours...", members: 8 },
-  { id: "5", name: "Marie Dupont", type: "direct", unread: 2, lastMessage: "Peux-tu regarder le doc?" },
-  { id: "6", name: "Thomas Martin", type: "direct", unread: 0, lastMessage: "Merci pour ton aide!" }
+  { id: "5", name: "daouda", type: "direct", unread: 2, lastMessage: "Peux-tu regarder le doc?" },
+  { id: "6", name: "bintou", type: "direct", unread: 0, lastMessage: "Merci pour ton aide!" }
 ];
 
 const mockMessages: Message[] = [
   {
     id: "1",
-    author: "Marie Dupont",
+    author: "daouda",
     content: "Bonjour l'équipe ! J'ai une mise à jour importante concernant le projet de migration cloud.",
     timestamp: "9:00",
     channel: "général",
@@ -47,14 +47,14 @@ const mockMessages: Message[] = [
   },
   {
     id: "2",
-    author: "Thomas Martin",
+    author: "daouda",
     content: "Super nouvelle ! Où en sommes-nous avec les tests de performance ?",
     timestamp: "9:05",
     channel: "général"
   },
   {
     id: "3",
-    author: "Sophie Bernard",
+    author: "daouda",
     content: "Les tests sont terminés et les résultats sont excellents. Je partage le rapport dans 5 minutes.",
     timestamp: "9:08",
     channel: "général",
@@ -62,7 +62,7 @@ const mockMessages: Message[] = [
   },
   {
     id: "4",
-    author: "Alexandre Moreau",
+    author: "daouda",
     content: "J'ai aussi terminé la configuration des environnements de staging. Tout est prêt pour la prochaine phase.",
     timestamp: "9:12",
     channel: "général"

@@ -14,7 +14,7 @@ const allInitiatives = [
   {
     title: "Amélioration du processus de recrutement",
     description: "Optimiser notre pipeline de recrutement en intégrant des outils d'IA pour le tri des CV et l'évaluation initiale des candidats.",
-    author: { name: "Marie Dupont", role: "Responsable RH" },
+    author: { name: "daouda", role: "Responsable RH" },
     status: "in-progress" as const,
     likes: 24,
     comments: 8,
@@ -26,7 +26,7 @@ const allInitiatives = [
   {
     title: "Mise en place d'un système de mentorat",
     description: "Créer un programme de mentorat pour favoriser le développement professionnel et le partage de connaissances entre les équipes.",
-    author: { name: "Thomas Martin", role: "Lead Developer" },
+    author: { name: "daouda", role: "Lead Developer" },
     status: "pending" as const,
     likes: 18,
     comments: 12,
@@ -38,7 +38,7 @@ const allInitiatives = [
   {
     title: "Dashboard analytique temps réel",
     description: "Développer un tableau de bord centralisé pour visualiser les KPIs de tous les départements en temps réel.",
-    author: { name: "Sophie Bernard", role: "Data Analyst" },
+    author: { name: "daouda", role: "Data Analyst" },
     status: "in-progress" as const,
     likes: 42,
     comments: 15,
@@ -50,7 +50,7 @@ const allInitiatives = [
   {
     title: "Programme bien-être au travail",
     description: "Mettre en place des activités et espaces dédiés au bien-être des employés pour améliorer la qualité de vie au travail.",
-    author: { name: "Lucas Petit", role: "Chargé RH" },
+    author: { name: "daouda", role: "Chargé RH" },
     status: "completed" as const,
     likes: 56,
     comments: 23,
@@ -62,7 +62,7 @@ const allInitiatives = [
   {
     title: "Migration vers le cloud",
     description: "Migrer l'infrastructure existante vers une solution cloud pour améliorer la scalabilité et réduire les coûts.",
-    author: { name: "Alexandre Moreau", role: "DevOps Engineer" },
+    author: { name: "daouda", role: "DevOps Engineer" },
     status: "in-progress" as const,
     likes: 38,
     comments: 19,
@@ -74,7 +74,7 @@ const allInitiatives = [
   {
     title: "Refonte de l'onboarding",
     description: "Créer un parcours d'intégration digitalisé et personnalisé pour les nouveaux employés.",
-    author: { name: "Emma Richard", role: "Responsable formation" },
+    author: { name: "daouda", role: "Responsable formation" },
     status: "on-hold" as const,
     likes: 22,
     comments: 10,

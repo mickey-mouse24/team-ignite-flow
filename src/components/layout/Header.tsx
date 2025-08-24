@@ -52,11 +52,12 @@ export function Header() {
               className="pl-9 w-64"
             />
           </div>
-
+          <Link to="/initiatives">
           <Button variant="gradient" size="sm" className="gap-2">
             <Plus className="h-4 w-4" />
             <span className="hidden lg:inline">Nouvelle initiative</span>
           </Button>
+          </Link>
 
           <Button variant="ghost" size="icon" className="relative">
             <MessageSquare className="h-5 w-5" />
