@@ -1,73 +1,286 @@
-# Welcome to your Lovable project
+# 🚀 CollabFlow - Plateforme de Collaboration d'Équipe
 
-## Project info
+Une application moderne de gestion de projets et de collaboration d'équipe construite avec React, TypeScript, et Node.js.
 
-**URL**: https://lovable.dev/projects/4b59c65d-0199-4e06-8ea5-fca96f2007c4
+## ✨ Fonctionnalités
 
-## How can I edit this code?
+- 🔐 **Authentification sécurisée** avec JWT
+- 📋 **Gestion d'initiatives** avec likes et commentaires
+- 👥 **Gestion d'équipes** et de projets
+- 🔔 **Système de notifications** en temps réel
+- 📊 **Tableaux de bord** avec statistiques
+- 🎨 **Interface moderne** avec Tailwind CSS et shadcn/ui
+- 📱 **Responsive design** pour tous les appareils
+- ⚡ **Performance optimisée** avec React Query et code splitting
 
-There are several ways of editing your application.
+## 🛠️ Technologies
 
-**Use Lovable**
+### Frontend
+- **React 18** avec TypeScript
+- **Vite** pour le build et le développement
+- **React Router** pour la navigation
+- **React Query** pour la gestion d'état serveur
+- **Tailwind CSS** pour le styling
+- **shadcn/ui** pour les composants
+- **Lucide React** pour les icônes
+- **Sonner** pour les notifications toast
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/4b59c65d-0199-4e06-8ea5-fca96f2007c4) and start prompting.
+### Backend
+- **Node.js** avec CommonJS
+- **Prisma** comme ORM
+- **SQLite** pour la base de données
+- **JWT** pour l'authentification
+- **bcryptjs** pour le hachage des mots de passe
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🚀 Installation
 
-**Use your preferred IDE**
+### Prérequis
+- Node.js 18+ 
+- npm ou yarn
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 1. Cloner le repository
+```bash
+git clone https://github.com/votre-username/collabflow.git
+cd collabflow
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 2. Installer les dépendances
+```bash
+npm install
+```
 
-Follow these steps:
+### 3. Configuration de l'environnement
+```bash
+cp env.example .env
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Modifiez le fichier `.env` selon vos besoins :
+```env
+# Database
+DATABASE_URL="file:./dev.db"
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# JWT
+JWT_SECRET="votre-secret-jwt-super-securise"
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Server
+PORT=3001
+NODE_ENV=development
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# API
+API_URL="http://localhost:3001/api"
+
+# CORS
+CORS_ORIGIN="http://localhost:5173"
+
+# Security
+BCRYPT_ROUNDS=12
+JWT_EXPIRES_IN="24h"
+```
+
+### 4. Configuration de la base de données
+```bash
+# Générer le client Prisma
+npm run db:generate
+
+# Pousser le schéma vers la base de données
+npm run db:push
+
+# Créer un utilisateur admin
+npm run db:admin
+
+# (Optionnel) Seeder la base de données
+npm run db:seed
+```
+
+### 5. Démarrer l'application
+
+#### Développement complet (serveur + client)
+```bash
+npm run dev:full
+```
+
+#### Ou séparément :
+```bash
+# Terminal 1 - Serveur backend
+npm run dev:server
+
+# Terminal 2 - Client frontend
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+L'application sera disponible sur :
+- Frontend : http://localhost:5173
+- Backend API : http://localhost:3001/api
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📁 Structure du Projet
 
-**Use GitHub Codespaces**
+```
+team-ignite-flow/
+├── src/
+│   ├── components/          # Composants React
+│   │   ├── ui/             # Composants UI (shadcn/ui)
+│   │   ├── layout/         # Composants de mise en page
+│   │   └── ...
+│   ├── hooks/              # Hooks personnalisés
+│   ├── pages/              # Pages de l'application
+│   ├── lib/                # Utilitaires et configurations
+│   └── App.tsx             # Composant racine
+├── server/
+│   └── real-server.cjs     # Serveur backend
+├── prisma/
+│   ├── schema.prisma       # Schéma de base de données
+│   ├── seed.cjs           # Données de test
+│   └── create-admin.cjs   # Script de création d'admin
+├── public/                 # Assets statiques
+└── dist/                   # Build de production
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🔧 Scripts Disponibles
 
-## What technologies are used for this project?
+```bash
+# Développement
+npm run dev              # Démarrer le client en mode dev
+npm run dev:server       # Démarrer le serveur backend
+npm run dev:full         # Démarrer client + serveur
 
-This project is built with:
+# Build
+npm run build            # Build de production
+npm run build:dev        # Build en mode développement
+npm run preview          # Prévisualiser le build
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+# Base de données
+npm run db:generate      # Générer le client Prisma
+npm run db:push          # Pousser le schéma vers la DB
+npm run db:studio        # Ouvrir Prisma Studio
+npm run db:admin         # Créer un utilisateur admin
+npm run db:seed          # Seeder la base de données
 
-## How can I deploy this project?
+# Qualité de code
+npm run lint             # Linter ESLint
+```
 
-Simply open [Lovable](https://lovable.dev/projects/4b59c65d-0199-4e06-8ea5-fca96f2007c4) and click on Share -> Publish.
+## 🔐 Authentification
 
-## Can I connect a custom domain to my Lovable project?
+L'application utilise JWT pour l'authentification. Les tokens sont stockés dans le localStorage et renouvelés automatiquement.
 
-Yes, you can!
+### Utilisateur par défaut
+Après avoir exécuté `npm run db:admin`, vous pouvez vous connecter avec :
+- Email : `admin@collabflow.com`
+- Mot de passe : `admin123`
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 📊 API Endpoints
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Authentification
+- `POST /api/auth/login` - Connexion
+- `POST /api/auth/register` - Inscription
+- `GET /api/auth/profile` - Profil utilisateur
+
+### Initiatives
+- `GET /api/initiatives` - Liste des initiatives (avec pagination)
+- `POST /api/initiatives` - Créer une initiative
+- `PUT /api/initiatives/:id` - Modifier une initiative
+- `DELETE /api/initiatives/:id` - Supprimer une initiative
+- `POST /api/initiatives/:id/like` - Liker/unliker une initiative
+- `POST /api/initiatives/:id/comments` - Ajouter un commentaire
+
+### Notifications
+- `GET /api/notifications` - Liste des notifications
+- `PUT /api/notifications/:id/read` - Marquer comme lue
+
+### Projets
+- `GET /api/projects` - Liste des projets
+
+### Utilisateurs
+- `GET /api/users` - Liste des utilisateurs
+
+### Équipes
+- `GET /api/teams` - Liste des équipes
+
+## 🎨 Personnalisation
+
+### Thème
+L'application utilise Tailwind CSS avec un système de thème personnalisable. Modifiez les couleurs dans `tailwind.config.ts`.
+
+### Composants UI
+Les composants shadcn/ui peuvent être personnalisés dans `src/components/ui/`.
+
+## 🚀 Déploiement
+
+### Production
+```bash
+# Build de production
+npm run build
+
+# Le dossier dist/ contient l'application prête pour la production
+```
+
+### Variables d'environnement de production
+```env
+NODE_ENV=production
+JWT_SECRET=votre-secret-super-securise
+CORS_ORIGIN=https://votre-domaine.com
+DATABASE_URL=file:./prod.db
+```
+
+## 🧪 Tests
+
+```bash
+# Lancer les tests (à implémenter)
+npm test
+
+# Tests en mode watch
+npm run test:watch
+```
+
+## 📈 Performance
+
+L'application est optimisée pour les performances :
+
+- **Code splitting** automatique avec Vite
+- **Lazy loading** des composants
+- **Cache intelligent** avec React Query
+- **Optimisation des images** et assets
+- **Bundle size** optimisé (~800KB gzippé)
+
+## 🔒 Sécurité
+
+- Validation des entrées côté serveur
+- Protection CSRF avec CORS configuré
+- Hachage sécurisé des mots de passe (bcrypt)
+- Tokens JWT avec expiration
+- Sanitisation des données
+
+## 🤝 Contribution
+
+1. Fork le projet
+2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
+3. Commit les changements (`git commit -m 'Add some AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
+
+## 📝 Licence
+
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+
+## 🆘 Support
+
+Si vous rencontrez des problèmes :
+
+1. Vérifiez que toutes les dépendances sont installées
+2. Assurez-vous que la base de données est configurée
+3. Vérifiez les logs du serveur
+4. Ouvrez une issue sur GitHub
+
+## 🔄 Changelog
+
+### v1.0.0
+- ✅ Authentification complète
+- ✅ Gestion des initiatives
+- ✅ Système de notifications
+- ✅ Interface responsive
+- ✅ Optimisations de performance
+- ✅ Gestion d'erreurs robuste
+
+---
+
+**CollabFlow** - Simplifiez la collaboration de votre équipe ! 🚀
