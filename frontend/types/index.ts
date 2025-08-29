@@ -1,178 +1,48 @@
+import { z } from 'zod';
+import {
+  UserSchema,
+  InitiativeSchema,
+  ProjectSchema,
+  TeamSchema,
+  TeamMemberSchema,
+  NotificationSchema,
+  CreateInitiativeDataSchema,
+  UpdateInitiativeDataSchema,
+  CreateProjectDataSchema,
+  UpdateProjectDataSchema,
+  RegisterDataSchema,
+} from './schemas';
+
 // Types de base pour l'application
 
 // Interface utilisateur
-export interface User {
-  id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  role: string;
-  department?: string;
-  avatar_url?: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-}
+export type User = z.infer<typeof UserSchema>;
 
 // Interface initiative
-export interface Initiative {
-  id: number;
-  title: string;
-  description: string;
-  author_id: number;
-  status: 'pending' | 'in-progress' | 'completed' | 'on-hold' | 'cancelled';
-  category: string;
-  progress: number;
-  likes: number;
-  comments_count: number;
-  participants_count: number;
-  created_at: string;
-  updated_at: string;
-  first_name: string;
-  last_name: string;
-  author_role: string;
-  author_avatar?: string;
-  // Nouveaux champs pour la cohérence avec le backend
-  objectives?: string;
-  expected_impact?: string;
-  kpi?: string;
-  owner?: string;
-  deadline?: string;
-  team_size?: string;
-  resources?: string;
-  budget?: number;
-  priority?: 'low' | 'medium' | 'high' | 'critical';
-}
+export type Initiative = z.infer<typeof InitiativeSchema>;
 
 // Interface projet
-export interface Project {
-  id: number;
-  name: string;
-  description: string;
-  status: 'planning' | 'in-progress' | 'completed' | 'on-hold' | 'cancelled' | 'review';
-  priority: 'low' | 'medium' | 'high' | 'critical' | 'highest';
-  start_date: string;
-  end_date: string;
-  budget: number; // Calculé à partir de budget_allocated
-  budget_allocated?: number; // API field
-  budget_spent?: number; // API field
-  progress: number;
-  manager_id: number;
-  team_id?: number;
-  created_at: string;
-  updated_at: string;
-  manager_name?: string;
-  team_name?: string;
-  first_name?: string; // API field
-  last_name?: string; // API field
-}
+export type Project = z.infer<typeof ProjectSchema>;
 
 // Interface équipe
-export interface Team {
-  id: number;
-  name: string;
-  description?: string;
-  manager_id: number;
-  created_at: string;
-  updated_at: string;
-  member_count: number;
-  manager_name?: string;
-}
+export type Team = z.infer<typeof TeamSchema>;
 
 // Interface membre d'équipe
-export interface TeamMember {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  role: string;
-  department?: string;
-  avatar_url?: string;
-  avatar?: string;
-  status: string;
-  team_id?: number;
-  phone?: string;
-  location?: string;
-  created_at: string;
-}
+export type TeamMember = z.infer<typeof TeamMemberSchema>;
 
 // Interface notification
-export interface Notification {
-  id: string;
-  user_id: number;
-  title: string;
-  message: string;
-  type: 'info' | 'success' | 'warning' | 'error';
-  is_read: boolean;
-  created_at: string;
-  user_name?: string;
-}
+export type Notification = z.infer<typeof NotificationSchema>;
 
 // Types pour les données de création
-export interface CreateInitiativeData {
-  title: string;
-  description: string;
-  category: string;
-  objectives?: string;
-  expected_impact?: string;
-  kpi?: string;
-  owner?: string;
-  deadline?: string;
-  team_size?: string;
-  resources?: string;
-  budget?: number;
-  priority?: 'low' | 'medium' | 'high' | 'critical';
-}
+export type CreateInitiativeData = z.infer<typeof CreateInitiativeDataSchema>;
 
-export interface UpdateInitiativeData {
-  title?: string;
-  description?: string;
-  category?: string;
-  status?: string;
-  progress?: number;
-  objectives?: string;
-  expected_impact?: string;
-  kpi?: string;
-  owner?: string;
-  deadline?: string;
-  team_size?: string;
-  resources?: string;
-  budget?: number;
-  priority?: 'low' | 'medium' | 'high' | 'critical';
-}
+export type UpdateInitiativeData = z.infer<typeof UpdateInitiativeDataSchema>;
 
-export interface CreateProjectData {
-  name: string;
-  description: string;
-  status: string;
-  priority: string;
-  start_date: string;
-  end_date: string;
-  budget: number;
-  manager_id: number;
-  team_id: number;
-}
+export type CreateProjectData = z.infer<typeof CreateProjectDataSchema>;
 
-export interface UpdateProjectData {
-  name?: string;
-  description?: string;
-  status?: string;
-  priority?: string;
-  start_date?: string;
-  end_date?: string;
-  budget?: number;
-  progress?: number;
-  manager_id?: number;
-  team_id?: number;
-}
+export type UpdateProjectData = z.infer<typeof UpdateProjectDataSchema>;
 
-export interface RegisterData {
-  email: string;
-  password: string;
-  first_name: string;
-  last_name: string;
-  department?: string;
-}
+export type RegisterData = z.infer<typeof RegisterDataSchema>;
 
 // Types pour les réponses API
 export interface PaginationInfo {

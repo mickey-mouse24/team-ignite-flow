@@ -124,15 +124,6 @@ export const useInitiatives = (filters: InitiativeFilters = {}) => {
     });
   };
 
-  // Debug pour voir les données (seulement en développement)
-  if (process.env.NODE_ENV === 'development') {
-    console.log('📊 useInitiatives debug:', {
-      initiativesCount: initiativesData?.initiatives?.length || 0,
-      filters,
-      initiatives: initiativesData?.initiatives?.map(i => ({ id: i.id, title: i.title, category: i.category, status: i.status })) || []
-    });
-  }
-
   return {
     // Données
     initiatives: initiativesData?.initiatives || [],

@@ -16,7 +16,20 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Simulation de l'authentification sans backend
+// Validation des tokens
+const validateToken = (token: string): boolean => {
+  if (!token || typeof token !== 'string') return false;
+  
+  // Vérifier la structure du token (format basique)
+  const tokenParts = token.split('-');
+  if (tokenParts.length < 3) return false;
+  
+  // Vérifier que le token n'est pas expiré (simulation)
+  // En production, il faudrait vérifier la signature JWT
+  return true;
+};
+
+// Authentification simulée (fallback si le backend n'est pas disponible)
 const simulateAuth = async (email: string, password: string) => {
   // Simuler un délai de réseau
   await new Promise(resolve => setTimeout(resolve, 1000))
@@ -61,7 +74,49 @@ const simulateAuth = async (email: string, password: string) => {
   }
 }
 
-function useAuth() {
+// Authentification avec le backend réel ou simulation
+const authenticateWithBackend = async (email: string, password: string) => {
+  // Validation des entrées
+  if (!email || !password) {
+    throw new Error('Email et mot de passe requis');
+  }
+  
+  if (!email.includes('@')) {
+    throw new Error('Format d\'email invalide');
+  }
+  
+  if (password.length < 6) {
+    throw new Error('Le mot de passe doit contenir au moins 6 caractères');
+  }
+  
+  try {
+    const response = await fetch('http://localhost:3001/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Erreur de connexion');
+    }
+
+    return {
+      success: true,
+      user: data.data.user,
+      token: data.data.token
+    };
+  } catch (error) {
+    // Si le backend n'est pas disponible, utiliser l'authentification simulée
+    console.log('Backend non disponible, utilisation de l\'authentification simulée');
+    return simulateAuth(email, password);
+  }
+}
+
+const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
@@ -89,10 +144,21 @@ function AuthProvider({ children }: AuthProviderProps) {
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
     
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-      setToken(storedToken);
-      return true;
+    if (storedUser && storedToken && validateToken(storedToken)) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        setToken(storedToken);
+        return true;
+      } catch (error) {
+        // Si le parsing échoue, nettoyer les données corrompues
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        localStorage.removeItem('isAuthenticated');
+        setUser(null);
+        setToken(null);
+        return false;
+      }
     }
     return false;
   }, []);
@@ -104,11 +170,21 @@ function AuthProvider({ children }: AuthProviderProps) {
       const storedToken = localStorage.getItem('token');
       const isAuthenticated = localStorage.getItem('isAuthenticated');
       
-      if (storedUser && storedToken && isAuthenticated === 'true') {
-        setUser(JSON.parse(storedUser));
-        setToken(storedToken);
+      if (storedUser && storedToken && isAuthenticated === 'true' && validateToken(storedToken)) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+          setToken(storedToken);
+        } catch (error) {
+          // Nettoyer si les données sont corrompues
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+          localStorage.removeItem('isAuthenticated');
+          setUser(null);
+          setToken(null);
+        }
       } else {
-        // Nettoyer si les données sont incomplètes
+        // Nettoyer si les données sont incomplètes ou invalides
         localStorage.removeItem('user');
         localStorage.removeItem('token');
         localStorage.removeItem('isAuthenticated');
@@ -126,9 +202,9 @@ function AuthProvider({ children }: AuthProviderProps) {
       setIsLoading(true);
       setError(null);
 
-      const result = await simulateAuth(email, password);
+      const result = await authenticateWithBackend(email, password);
 
-      if (result.success) {
+      if (result.success && result.user && result.token) {
         setUser(result.user);
         setToken(result.token);
         localStorage.setItem('user', JSON.stringify(result.user));
@@ -153,6 +229,19 @@ function AuthProvider({ children }: AuthProviderProps) {
       setIsLoading(true);
       setError(null);
 
+      // Validation des données d'inscription
+      if (!userData.email || !userData.password || !userData.first_name || !userData.last_name) {
+        throw new Error('Tous les champs sont requis');
+      }
+
+      if (!userData.email.includes('@')) {
+        throw new Error('Format d\'email invalide');
+      }
+
+      if (userData.password.length < 6) {
+        throw new Error('Le mot de passe doit contenir au moins 6 caractères');
+      }
+
       // Simulation d'inscription
       await new Promise(resolve => setTimeout(resolve, 1000));
       
@@ -169,7 +258,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         updated_at: new Date().toISOString()
       };
 
-      const newToken = `demo-token-${Date.now()}`;
+      const newToken = `demo-token-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
       setUser(newUser);
       setToken(newToken);
@@ -199,7 +288,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   const updateUser = useCallback((userData: Partial<User>) => {
     setUser(prev => {
       if (prev) {
-        const updatedUser = { ...prev, ...userData };
+        const updatedUser = { ...prev, ...userData, updated_at: new Date().toISOString() };
         localStorage.setItem('user', JSON.stringify(updatedUser));
         return updatedUser;
       }

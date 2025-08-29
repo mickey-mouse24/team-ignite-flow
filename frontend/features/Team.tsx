@@ -211,9 +211,9 @@ export default function Team() {
   }, [teamFormData, createTeam]);
 
   const handleRemoveMember = useCallback((userId: number, teamId: number) => {
-    removeTeamMember(teamId, userId);
+    removeMember({ teamId, userId });
     toast.success("Membre retiré de l'équipe");
-  }, [removeTeamMember]);
+  }, [removeMember]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -238,6 +238,7 @@ export default function Team() {
   };
 
   // Gestion des erreurs
+  const error = teamsError || usersError;
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-pink-50">
@@ -279,7 +280,7 @@ export default function Team() {
                 <div>
                   <p className="text-sm font-medium text-gray-600">Total Membres</p>
                   <p className="text-3xl font-bold text-gray-900">
-                    {isLoading ? <Loader2 className="h-8 w-8 animate-spin" /> : users.length}
+                    {(isLoadingUsers || isLoadingTeams) ? <Loader2 className="h-8 w-8 animate-spin" /> : users.length}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
                     {users.filter(u => u.status === 'active').length} actifs
@@ -298,7 +299,7 @@ export default function Team() {
                 <div>
                   <p className="text-sm font-medium text-gray-600">Équipes</p>
                   <p className="text-3xl font-bold text-gray-900">
-                    {isLoading ? <Loader2 className="h-8 w-8 animate-spin" /> : teams.length}
+                    {(isLoadingUsers || isLoadingTeams) ? <Loader2 className="h-8 w-8 animate-spin" /> : teams.length}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
                     Organisées par département
@@ -317,7 +318,7 @@ export default function Team() {
                 <div>
                   <p className="text-sm font-medium text-gray-600">Managers</p>
                   <p className="text-3xl font-bold text-gray-900">
-                    {isLoading ? <Loader2 className="h-8 w-8 animate-spin" /> : users.filter(u => u.role === 'manager').length}
+                    {(isLoadingUsers || isLoadingTeams) ? <Loader2 className="h-8 w-8 animate-spin" /> : users.filter(u => u.role === 'manager').length}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
                     Leaders d'équipe
@@ -336,7 +337,7 @@ export default function Team() {
                 <div>
                   <p className="text-sm font-medium text-gray-600">Départements</p>
                   <p className="text-3xl font-bold text-gray-900">
-                    {isLoading ? <Loader2 className="h-8 w-8 animate-spin" /> : 
+                    {(isLoadingUsers || isLoadingTeams) ? <Loader2 className="h-8 w-8 animate-spin" /> : 
                       new Set(users.map(u => u.department)).size
                     }
                   </p>
@@ -614,7 +615,7 @@ export default function Team() {
 
         {/* Team Members Grid */}
         <div className="space-y-6">
-          {isLoading ? (
+          {(isLoadingUsers || isLoadingTeams) ? (
             <div className="flex items-center justify-center py-12">
               <div className="text-center space-y-4">
                 <Loader2 className="mx-auto h-8 w-8 animate-spin text-purple-600" />

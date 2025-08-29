@@ -46,9 +46,21 @@ export default defineConfig({
       compress: {
         drop_console: true,
         drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+        passes: 2,
+      },
+      mangle: {
+        toplevel: true,
+      },
+      format: {
+        comments: false,
       },
     },
     chunkSizeWarningLimit: 1000,
+    // Optimisations de sécurité
+    assetsInlineLimit: 4096, // Inline les petits assets
+    cssCodeSplit: true,
+    reportCompressedSize: false, // Améliore les performances de build
   },
   optimizeDeps: {
     include: [
@@ -59,14 +71,31 @@ export default defineConfig({
       'lucide-react',
       'sonner',
     ],
+    exclude: ['@radix-ui/react-*'], // Exclure les composants Radix UI du pre-bundling
   },
   server: {
     port: 5173,
     host: true,
     open: true,
+    // Configuration de sécurité pour le serveur de développement
+    headers: {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'X-XSS-Protection': '1; mode=block',
+    },
   },
   preview: {
     port: 4173,
     host: true,
+    // Configuration de sécurité pour le serveur de preview
+    headers: {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'X-XSS-Protection': '1; mode=block',
+    },
+  },
+  // Configuration pour la sécurité
+  define: {
+    __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
   },
 })

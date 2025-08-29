@@ -89,7 +89,7 @@ export default function Dashboard() {
           <div className="text-center space-y-4">
             <AlertTriangle className="mx-auto h-12 w-12 text-red-500" />
             <h2 className="text-2xl font-bold text-gray-900">Erreur de chargement</h2>
-            <p className="text-gray-600">{statsError}</p>
+            <p className="text-gray-600">Erreur de connexion au serveur</p>
             <Button onClick={() => window.location.reload()}>
               Réessayer
             </Button>
@@ -122,10 +122,10 @@ export default function Dashboard() {
                 <div>
                   <p className="text-sm font-medium text-gray-600">Initiatives</p>
                   <p className="text-2xl sm:text-3xl font-bold text-gray-900">
-                    {isLoading ? <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin" /> : stats.initiatives.total}
+                    {isLoading ? <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin" /> : stats?.initiatives?.total || 0}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    {stats.initiatives.inProgress} en cours
+                    {stats?.initiatives?.inProgress || 0} en cours
                   </p>
                 </div>
                 <div className="h-10 w-10 sm:h-12 sm:w-12 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -141,10 +141,10 @@ export default function Dashboard() {
                 <div>
                   <p className="text-sm font-medium text-gray-600">Projets</p>
                   <p className="text-2xl sm:text-3xl font-bold text-gray-900">
-                    {isLoading ? <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin" /> : stats.projects.total}
+                    {isLoading ? <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin" /> : stats?.projects?.total || 0}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    {stats.projects.inProgress} actifs
+                    {stats?.projects?.inProgress || 0} actifs
                   </p>
                 </div>
                 <div className="h-10 w-10 sm:h-12 sm:w-12 bg-green-100 rounded-xl flex items-center justify-center">
@@ -160,10 +160,10 @@ export default function Dashboard() {
                 <div>
                   <p className="text-sm font-medium text-gray-600">Équipe</p>
                   <p className="text-2xl sm:text-3xl font-bold text-gray-900">
-                    {isLoading ? <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin" /> : stats.team.total}
+                    {isLoading ? <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin" /> : stats?.users || 0}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    {stats.team.active} actifs
+                    {users?.length || 0} actifs
                   </p>
                 </div>
                 <div className="h-10 w-10 sm:h-12 sm:w-12 bg-purple-100 rounded-xl flex items-center justify-center">
@@ -180,7 +180,7 @@ export default function Dashboard() {
                   <p className="text-sm font-medium text-gray-600">Progression</p>
                   <p className="text-2xl sm:text-3xl font-bold text-gray-900">
                     {isLoading ? <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin" /> : 
-                      `${Math.round((stats.initiatives.completed + stats.projects.completed) / Math.max(stats.initiatives.total + stats.projects.total, 1) * 100)}%`
+                      `${Math.round(((stats?.initiatives?.completed || 0) + (stats?.projects?.completed || 0)) / Math.max((stats?.initiatives?.total || 0) + (stats?.projects?.total || 0), 1) * 100)}%`
                     }
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
@@ -302,10 +302,10 @@ export default function Dashboard() {
                       </div>
                       <Progress value={project.progress || 0} className="h-1" />
                     </div>
-                                         <div className="flex items-center justify-between text-xs text-gray-500 mt-3">
-                       <span>Projet</span>
-                       <span>{new Date(project.created_at).toLocaleDateString()}</span>
-                     </div>
+                    <div className="flex items-center justify-between text-xs text-gray-500 mt-3">
+                      <span>Projet</span>
+                      <span>{new Date(project.created_at).toLocaleDateString()}</span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -318,8 +318,8 @@ export default function Dashboard() {
           </CardContent>
         </Card>
         
-         {/* Recent Activity */}
-         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Recent Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-2 bg-white/80 backdrop-blur-sm border-0 shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -328,37 +328,10 @@ export default function Dashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {isLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-                </div>
-              ) : stats.recentActivity.length > 0 ? (
-                stats.recentActivity.map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div className="h-8 w-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      {getActivityIcon(activity.type)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 line-clamp-1">
-                        {activity.title}
-                      </p>
-                      <p className="text-xs text-gray-600">
-                        {activity.description} • {new Date(activity.timestamp).toLocaleDateString()}
-                      </p>
-                      {activity.user && (
-                        <p className="text-xs text-gray-500">
-                          par {activity.user.name}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <Activity className="mx-auto h-8 w-8 mb-2" />
-                  <p>Aucune activité récente</p>
-                </div>
-              )}
+              <div className="text-center py-8 text-gray-500">
+                <Activity className="mx-auto h-8 w-8 mb-2" />
+                <p>Fonctionnalité d'activité récente à venir</p>
+              </div>
             </CardContent>
           </Card>
 

@@ -1,0 +1,165 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  first_name String
+  last_name  String
+  role       String   @default("user")
+  department String?
+  avatar_url String?
+  status     String   @default("available")
+  phone      String?
+  location   String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  initiatives    Initiative[]   @relation("UserInitiatives")
+  projects       Project[]      @relation("UserProjects")
+  teams          Team[]         @relation("UserTeams")
+  teamMemberships TeamMember[]
+  comments       Comment[]
+  likes          Like[]
+  notifications  Notification[]
+
+  @@map("users")
+}
+
+model Initiative {
+  id                 Int      @id @default(autoincrement())
+  title              String
+  description        String
+  author_id          Int
+  status             String   @default("pending")
+  category           String
+  progress           Int      @default(0)
+  objectives         String?
+  expected_impact    String?
+  kpi                String?
+  owner              String?
+  deadline           DateTime?
+  team_size          String?
+  resources          String?
+  budget             Float?
+  priority           String   @default("medium")
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  // Relations
+  author    User      @relation("UserInitiatives", fields: [author_id], references: [id])
+  comments  Comment[]
+  likes     Like[]
+  projects  Project[]
+
+  @@map("initiatives")
+}
+
+model Project {
+  id              Int      @id @default(autoincrement())
+  name            String
+  description     String
+  status          String   @default("planning")
+  priority        String   @default("medium")
+  start_date      DateTime
+  end_date        DateTime
+  budget_allocated Float?
+  budget_spent    Float?
+  progress        Int      @default(0)
+  manager_id      Int
+  team_id         Int?
+  initiative_id   Int?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  // Relations
+  manager   User        @relation("UserProjects", fields: [manager_id], references: [id])
+  team      Team?       @relation(fields: [team_id], references: [id])
+  initiative Initiative? @relation(fields: [initiative_id], references: [id])
+
+  @@map("projects")
+}
+
+model Team {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  manager_id  Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relations
+  manager  User      @relation("UserTeams", fields: [manager_id], references: [id])
+  projects Project[]
+  members  TeamMember[]
+
+  @@map("teams")
+}
+
+model TeamMember {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  team_id   Int
+  role      String   @default("member")
+  joined_at DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id])
+  team Team @relation(fields: [team_id], references: [id])
+
+  @@unique([user_id, team_id])
+  @@map("team_members")
+}
+
+model Comment {
+  id           Int      @id @default(autoincrement())
+  content      String
+  user_id      Int
+  initiative_id Int
+  created_at   DateTime @default(now())
+
+  // Relations
+  user       User       @relation(fields: [user_id], references: [id])
+  initiative Initiative @relation(fields: [initiative_id], references: [id])
+
+  @@map("comments")
+}
+
+model Like {
+  id           Int      @id @default(autoincrement())
+  user_id      Int
+  initiative_id Int
+  created_at   DateTime @default(now())
+
+  // Relations
+  user       User       @relation(fields: [user_id], references: [id])
+  initiative Initiative @relation(fields: [initiative_id], references: [id])
+
+  @@unique([user_id, initiative_id])
+  @@map("likes")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  user_id   Int
+  title     String
+  message   String
+  type      String   @default("info")
+  is_read   Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("notifications")
+}

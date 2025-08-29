@@ -14,9 +14,6 @@ import {
   Lightbulb,
   ArrowRight,
   Eye,
-  Heart,
-  MessageCircle,
-  Share2,
   Edit,
   Trash2,
   MoreHorizontal,
@@ -95,7 +92,8 @@ export default function Initiatives() {
     priority: 'medium' as 'low' | 'medium' | 'high' | 'critical',
     budget: '',
     team_size: '',
-    expected_impact: ''
+    expected_impact: '',
+    progress: '0'
   });
 
 
@@ -172,12 +170,6 @@ export default function Initiatives() {
       return false;
     }
 
-    // Validation du budget si renseigné
-    if (data.budget && (isNaN(parseFloat(data.budget)) || parseFloat(data.budget) < 0)) {
-      toast.error("Le budget doit être un nombre positif");
-      return false;
-    }
-
     // Validation de la date limite si renseignée
     if (data.deadline) {
       const deadlineDate = new Date(data.deadline);
@@ -191,19 +183,70 @@ export default function Initiatives() {
       }
     }
 
+    // Validation du budget si renseigné
+    if (data.budget && (isNaN(parseFloat(data.budget)) || parseFloat(data.budget) < 0)) {
+      toast.error("Le budget doit être un nombre positif");
+      return false;
+    }
+
+    // Validation du progrès
+    const progress = parseInt(data.progress);
+    if (isNaN(progress) || progress < 0 || progress > 100) {
+      toast.error("Le progrès doit être un nombre entre 0 et 100");
+      return false;
+    }
+
     return true;
   }, []);
 
+  // Fonction pour réinitialiser le formulaire
+  const resetFormData = useCallback(() => {
+    setFormData({
+      title: '',
+      description: '',
+      category: '',
+      objectives: '',
+      owner: '',
+      deadline: '',
+      resources: '',
+      kpi: '',
+      priority: 'medium',
+      budget: '',
+      team_size: '',
+      expected_impact: '',
+      progress: '0'
+    });
+  }, []);
+
+  // Fonctions séparées pour chaque dialog
+  const handleCreateDialogClose = useCallback(() => {
+    setIsCreateDialogOpen(false);
+    resetFormData();
+  }, [resetFormData]);
+
+  const handleViewDialogClose = useCallback(() => {
+    setIsViewDialogOpen(false);
+    setSelectedInitiative(null);
+  }, []);
+
+  const handleEditDialogClose = useCallback(() => {
+    setIsEditDialogOpen(false);
+    setSelectedInitiative(null);
+    resetFormData();
+  }, [resetFormData]);
+
+  // Fonction générale pour fermer toutes les dialogs (gardée pour compatibilité)
   const handleDialogClose = useCallback(() => {
     setIsCreateDialogOpen(false);
     setIsViewDialogOpen(false);
     setIsEditDialogOpen(false);
     setSelectedInitiative(null);
-  }, []);
+    resetFormData();
+  }, [resetFormData]);
 
-  // Affichage de toutes les initiatives sans filtrage
+  // Affichage de toutes les initiatives sans filtrage avec protection contre les valeurs nulles
   const filteredInitiatives = useMemo(() => {
-    return initiatives;
+    return initiatives || [];
   }, [initiatives]);
 
   // Pagination
@@ -238,7 +281,8 @@ export default function Initiatives() {
         team_size: formData.team_size || undefined,
         resources: formData.resources.trim() || undefined,
         budget: formData.budget ? parseFloat(formData.budget) : undefined,
-        priority: formData.priority
+        priority: formData.priority,
+        progress: parseInt(formData.progress)
       });
       
       setIsCreateDialogOpen(false);
@@ -256,7 +300,8 @@ export default function Initiatives() {
         priority: 'medium' as 'low' | 'medium' | 'high' | 'critical',
         budget: '',
         team_size: '',
-        expected_impact: ''
+        expected_impact: '',
+        progress: '0'
       });
 
       toast.success("Initiative créée avec succès !");
@@ -291,7 +336,8 @@ export default function Initiatives() {
           team_size: formData.team_size || undefined,
           resources: formData.resources.trim() || undefined,
           budget: formData.budget ? parseFloat(formData.budget) : undefined,
-          priority: formData.priority
+          priority: formData.priority,
+          progress: parseInt(formData.progress)
         }
       });
       
@@ -311,7 +357,8 @@ export default function Initiatives() {
         priority: 'medium' as 'low' | 'medium' | 'high' | 'critical',
         budget: '',
         team_size: '',
-        expected_impact: ''
+        expected_impact: '',
+        progress: '0'
       });
 
       toast.success("Initiative modifiée avec succès !");
@@ -339,22 +386,28 @@ export default function Initiatives() {
   }, []);
 
   const handleEdit = useCallback((initiative: Initiative) => {
-    setSelectedInitiative(initiative);
-    setFormData({
-      title: initiative.title,
-      description: initiative.description,
-      category: initiative.category,
-      objectives: '',
-      owner: '',
-      deadline: '',
-      resources: '',
-      kpi: '',
-      priority: 'medium',
-      budget: '',
-      team_size: '',
-      expected_impact: ''
-    });
-    setIsEditDialogOpen(true);
+    try {
+      setSelectedInitiative(initiative);
+      setFormData({
+        title: initiative.title || '',
+        description: initiative.description || '',
+        category: initiative.category || '',
+        objectives: initiative.objectives || '',
+        owner: initiative.owner || '',
+        deadline: initiative.deadline || '',
+        resources: initiative.resources || '',
+        kpi: initiative.kpi || '',
+        priority: initiative.priority || 'medium',
+        budget: initiative.budget ? initiative.budget.toString() : '',
+        team_size: initiative.team_size ? initiative.team_size.toString() : '',
+        expected_impact: initiative.expected_impact || '',
+        progress: (initiative.progress !== undefined && initiative.progress !== null) ? initiative.progress.toString() : '0'
+      });
+      setIsEditDialogOpen(true);
+    } catch (error) {
+      console.error('Erreur lors de l\'ouverture du formulaire d\'édition:', error);
+      toast.error('Impossible d\'ouvrir le formulaire d\'édition');
+    }
   }, []);
 
   const getStatusColor = (status: string) => {
@@ -387,6 +440,25 @@ export default function Initiatives() {
       default: return <Lightbulb className="h-4 w-4" />;
     }
   };
+
+  // Protection contre les erreurs qui causent un écran blanc
+  if (!initiatives && !isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <Header />
+        <main className="w-full py-8 px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-4">
+            <AlertTriangle className="mx-auto h-12 w-12 text-red-500" />
+            <h2 className="text-2xl font-bold text-gray-900">Erreur de chargement</h2>
+            <p className="text-gray-600">Impossible de charger les initiatives</p>
+            <Button onClick={() => window.location.reload()}>
+              Recharger la page
+            </Button>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -604,6 +676,25 @@ export default function Initiatives() {
                         onChange={handleInputChange}
                       />
                     </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="progress" className="text-sm font-medium">
+                        Progression (%)
+                      </Label>
+                      <Input
+                        id="progress"
+                        type="number"
+                        min="0"
+                        max="100"
+                        placeholder="0"
+                        className="bg-white/80"
+                        value={formData.progress}
+                        onChange={handleInputChange}
+                      />
+                      <p className="text-xs text-gray-500">
+                        Indiquez le pourcentage d'avancement de l'initiative (0-100%)
+                      </p>
+                    </div>
                   </div>
 
                   <div className="space-y-2">
@@ -731,7 +822,7 @@ export default function Initiatives() {
 
                 {/* Actions */}
                 <div className="flex gap-4 pt-4 border-t border-gray-200">
-                  <Button type="button" variant="outline" onClick={handleDialogClose} className="flex-1">
+                  <Button type="button" variant="outline" onClick={handleCreateDialogClose} className="flex-1">
                     <X className="h-4 w-4 mr-2" />
                     Annuler
                   </Button>
@@ -873,11 +964,18 @@ export default function Initiatives() {
                       </div>
                     )}
                     
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4" />
-                        <span>Créé le {new Date(initiative.created_at).toLocaleDateString()}</span>
+                    {/* Barre de progression */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600 font-medium">Progression</span>
+                        <span className="text-gray-900 font-semibold">
+                          {(initiative.progress !== undefined && initiative.progress !== null) ? initiative.progress : 0}%
+                        </span>
                       </div>
+                      <Progress 
+                        value={(initiative.progress !== undefined && initiative.progress !== null) ? initiative.progress : 0} 
+                        className="h-2" 
+                      />
                     </div>
                     
                     <Separator />
@@ -885,12 +983,8 @@ export default function Initiatives() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4 text-sm text-gray-500">
                         <div className="flex items-center gap-1">
-                          <Heart className="h-4 w-4" />
-                          <span>{initiative.likes}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <MessageCircle className="h-4 w-4" />
-                          <span>0</span>
+                          <Calendar className="h-4 w-4" />
+                          <span>Créée le {new Date(initiative.created_at).toLocaleDateString()}</span>
                         </div>
                       </div>
                       
@@ -975,14 +1069,36 @@ export default function Initiatives() {
                   )}
                 </div>
                 
+                {/* Barre de progression dans la modal */}
+                <div className="space-y-3 mb-6 p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-gray-700">Progression de l'initiative</span>
+                    <span className="text-lg font-bold text-gray-900">
+                      {(selectedInitiative.progress !== undefined && selectedInitiative.progress !== null) ? selectedInitiative.progress : 0}%
+                    </span>
+                  </div>
+                  <Progress 
+                    value={(selectedInitiative.progress !== undefined && selectedInitiative.progress !== null) ? selectedInitiative.progress : 0} 
+                    className="h-3" 
+                  />
+                  <p className="text-sm text-gray-600">
+                    {(() => {
+                      const progress = (selectedInitiative.progress !== undefined && selectedInitiative.progress !== null) ? selectedInitiative.progress : 0;
+                      if (progress === 0) return "Initiative non démarrée";
+                      if (progress > 0 && progress < 25) return "Initiative en phase de démarrage";
+                      if (progress >= 25 && progress < 50) return "Initiative en cours de développement";
+                      if (progress >= 50 && progress < 75) return "Initiative en bonne voie";
+                      if (progress >= 75 && progress < 100) return "Initiative presque terminée";
+                      if (progress === 100) return "Initiative terminée";
+                      return "Initiative en cours";
+                    })()}
+                  </p>
+                </div>
+                
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
                     <span className="font-medium">Créé le :</span>
                     <p className="text-gray-600">{new Date(selectedInitiative.created_at).toLocaleDateString()}</p>
-                  </div>
-                  <div>
-                    <span className="font-medium">Likes :</span>
-                    <p className="text-gray-600">{selectedInitiative.likes}</p>
                   </div>
                   {selectedInitiative.owner && (
                     <div>
@@ -1164,6 +1280,25 @@ export default function Initiatives() {
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="progress" className="text-sm font-medium">
+                    Progression (%)
+                  </Label>
+                  <Input
+                    id="progress"
+                    type="number"
+                    min="0"
+                    max="100"
+                    placeholder="0"
+                    className="bg-white/80"
+                    value={formData.progress}
+                    onChange={handleInputChange}
+                  />
+                  <p className="text-xs text-gray-500">
+                    Indiquez le pourcentage d'avancement de l'initiative (0-100%)
+                  </p>
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="kpi" className="text-sm font-medium">
                     Indicateurs de performance (KPIs)
                   </Label>
@@ -1288,7 +1423,7 @@ export default function Initiatives() {
 
               {/* Actions */}
               <div className="flex gap-4 pt-4 border-t border-gray-200">
-                <Button type="button" variant="outline" onClick={handleDialogClose} className="flex-1">
+                <Button type="button" variant="outline" onClick={handleEditDialogClose} className="flex-1">
                   <X className="h-4 w-4 mr-2" />
                   Annuler
                 </Button>
