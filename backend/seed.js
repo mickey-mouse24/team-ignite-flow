@@ -20,14 +20,14 @@ async function main() {
   // Créer l'utilisateur administrateur (user@collabflow.com)
   const admin = await prisma.user.create({
     data: {
-      email: 'user@collabflow.com',
+      email: 'user@collabflow.sn',
       first_name: 'User',
       last_name: 'Admin',
       role: 'admin',
       department: 'Management',
-      avatar_url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      phone: '+33 1 23 45 67 89',
-      location: 'Paris, France'
+      avatar_url: '/images/avatar.png',
+      phone: '+221 77 777 77 77',
+      location: 'Dakar, Senegal'
     }
   });
 

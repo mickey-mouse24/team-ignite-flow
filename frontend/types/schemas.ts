@@ -124,16 +124,38 @@ export const UpdateInitiativeDataSchema = CreateInitiativeDataSchema.partial();
 export const CreateProjectDataSchema = z.object({
   name: z.string().min(1, 'Le nom est requis').max(200, 'Le nom est trop long'),
   description: z.string().min(10, 'La description doit contenir au moins 10 caractères'),
-  status: z.string().min(1, 'Le statut est requis'),
-  priority: z.string().min(1, 'La priorité est requise'),
+  status: z.enum(['planning', 'in-progress', 'completed', 'on-hold', 'cancelled', 'review']).optional(),
+  priority: z.enum(['low', 'medium', 'high', 'critical', 'highest']).optional(),
   start_date: z.string().datetime('Date de début invalide'),
   end_date: z.string().datetime('Date de fin invalide'),
   budget: z.number().min(0, 'Le budget doit être positif'),
   manager_id: z.number().positive('ID du manager invalide'),
-  team_id: z.number().positive('ID de l\'équipe invalide'),
+  team_id: z.number().positive('ID de l\'équipe invalide').optional(),
 });
 
 export const UpdateProjectDataSchema = CreateProjectDataSchema.partial();
+
+export const CreateTeamDataSchema = z.object({
+  name: z.string().min(1, 'Le nom est requis').max(200, 'Le nom est trop long'),
+  description: z.string().optional(),
+  manager_id: z.number().positive('ID du manager invalide'),
+});
+
+export const UpdateTeamDataSchema = CreateTeamDataSchema.partial();
+
+export const CreateUserDataSchema = z.object({
+  email: z.string().email('Format d\'email invalide'),
+  first_name: z.string().min(1, 'Le prénom est requis').max(100, 'Le prénom est trop long'),
+  last_name: z.string().min(1, 'Le nom est requis').max(100, 'Le nom est trop long'),
+  role: z.enum(['admin', 'user', 'developer', 'designer', 'manager']).optional(),
+  department: z.string().optional(),
+  avatar_url: z.string().url().optional().or(z.undefined()),
+  status: z.enum(['available', 'busy', 'away', 'offline']).optional(),
+  phone: z.string().max(20, 'Le téléphone est trop long').optional(),
+  location: z.string().max(100, 'La localisation est trop longue').optional(),
+});
+
+export const UpdateUserDataSchema = CreateUserDataSchema.partial();
 
 export const RegisterDataSchema = z.object({
   email: z.string().email('Format d\'email invalide'),

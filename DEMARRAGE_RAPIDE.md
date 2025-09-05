@@ -1,141 +1,191 @@
 # 🚀 Guide de Démarrage Rapide - CollabFlow
 
-## ✅ **SERVEUR DÉMARRÉ AVEC SUCCÈS !**
+## ✅ **Application Lancée avec Succès !**
 
-### **📡 URLs d'accès :**
-- **Application Frontend** : http://localhost:5173
-- **API Backend** : http://localhost:3001/api
-- **Health Check** : http://localhost:3001/api/health
+Votre application CollabFlow est maintenant opérationnelle et accessible.
 
----
+## 🌐 **Accès à l'Application**
 
-## 🔐 **CONNEXION À L'APPLICATION**
+### **Frontend (Interface Utilisateur)**
+```
+🌐 URL: http://localhost:5173
+📱 Interface: React avec Vite
+🎨 UI: shadcn/ui + Tailwind CSS
+```
 
-### **Comptes de démonstration disponibles :**
+### **Backend (API)**
+```
+🔗 URL: http://localhost:3001
+📡 API: http://localhost:3001/api
+💾 Base de données: SQLite avec Prisma
+```
 
-| Email | Mot de passe | Rôle | Département |
-|-------|-------------|------|-------------|
-| `admin@collabflow.com` | `admin123` | Administrateur | IT |
-| `user@collabflow.com` | `user123` | Utilisateur | Marketing |
-| `dev@collabflow.com` | `dev123` | Développeur | IT |
-| `designer@collabflow.com` | `designer123` | Designer | Design |
+## 🔐 **Connexion à l'Application**
 
----
+### **Comptes de Test Disponibles**
 
-## 📊 **DONNÉES DISPONIBLES**
+#### **Administrateur**
+```
+📧 Email: daouda@collab.com
+🔑 Mot de passe: admin123
+👤 Rôle: Admin
+```
 
-### **Initiatives (3)**
-1. **Programme d'innovation collaborative** (100% terminé)
-2. **Mise en place d'une plateforme de formation** (25% terminé)
-3. **Optimisation du processus de recrutement** (65% terminé)
+#### **Manager RH**
+```
+📧 Email: marie.dupont@collab.com
+🔑 Mot de passe: user123
+👤 Rôle: Manager
+```
 
-### **Projets (2)**
-1. **Refonte du site web** (60% terminé)
-2. **Application mobile** (10% terminé)
+#### **Manager IT**
+```
+📧 Email: thomas.martin@collab.com
+🔑 Mot de passe: manager123
+👤 Rôle: Manager
+```
 
-### **Équipes (2)**
-1. **Équipe Développement** (2 membres)
-2. **Équipe Marketing** (1 membre)
+## 📱 **Pages Disponibles**
 
----
+### **Pages Principales**
+- 🏠 **Dashboard** (`/`) - Tableau de bord principal
+- 💡 **Initiatives** (`/initiatives`) - Gestion des initiatives
+- 📋 **Projets** (`/projects`) - Gestion des projets
+- 👥 **Équipe** (`/team`) - Gestion d'équipe
+- 🔐 **Connexion** (`/login`) - Page d'authentification
 
-## 🎯 **FONCTIONNALITÉS DISPONIBLES**
+### **Fonctionnalités**
+- ✅ **Authentification** - Connexion sécurisée
+- ✅ **Gestion des Initiatives** - Création et suivi
+- ✅ **Gestion des Projets** - Projets et tâches
+- ✅ **Gestion d'Équipe** - Structure organisationnelle
+- ✅ **Statistiques** - Tableau de bord avec métriques
 
-### **✅ Dashboard**
+## 🛠️ **Commandes Utiles**
+
+### **Démarrer l'Application**
+```bash
+# Démarrer frontend + backend
+npm run dev
+
+# Démarrer séparément
+npm run dev:frontend    # Frontend uniquement
+npm run dev:backend     # Backend uniquement
+```
+
+### **Base de Données**
+```bash
+# Peupler avec des données de test
+npm run db:seed
+
+# Ouvrir Prisma Studio (interface DB)
+npm run db:studio
+```
+
+### **Arrêter l'Application**
+```bash
+# Arrêter tous les processus
+pkill -f "node.*server" && pkill -f "vite"
+```
+
+## 📊 **Données de Test**
+
+### **Initiatives Disponibles**
+- 🎯 **Amélioration du processus de recrutement** (65% terminé)
+- ☁️ **Migration vers le cloud** (25% terminé)
+- 👨‍🏫 **Programme de mentorat** (100% terminé)
+
+### **Projets Disponibles**
+- 🚀 **Migration Cloud AWS** (65% terminé)
+- 📚 **Système de Mentorat** (100% terminé)
+
+### **Équipes**
+- 💻 **Équipe IT** - Développement et infrastructure
+- 📈 **Équipe Marketing** - Marketing et communication
+- 👥 **Équipe RH** - Ressources humaines
+- 🎓 **Équipe Formation** - Formation et développement
+
+## 🔧 **Dépannage**
+
+### **Problèmes Courants**
+
+#### **Port déjà utilisé**
+```bash
+# Libérer le port 3001 (backend)
+lsof -ti:3001 | xargs kill -9
+
+# Libérer le port 5173 (frontend)
+lsof -ti:5173 | xargs kill -9
+```
+
+#### **Base de données**
+```bash
+# Réinitialiser la base de données
+npm run db:seed
+```
+
+#### **Dépendances**
+```bash
+# Réinstaller les dépendances
+npm run install:all
+```
+
+## 📱 **Navigation dans l'Application**
+
+### **1. Connexion**
+- Ouvrez http://localhost:5173
+- Cliquez sur "Se connecter"
+- Utilisez un des comptes de test
+
+### **2. Dashboard**
+- Vue d'ensemble des projets et initiatives
 - Statistiques en temps réel
-- Vue d'ensemble des initiatives et projets
-- Métriques de performance
+- Activité récente
 
-### **✅ Gestion des Initiatives**
-- Créer une nouvelle initiative
-- Modifier une initiative existante
-- Supprimer une initiative
-- Liker une initiative
-- Filtrer par statut/catégorie
-- Recherche textuelle
+### **3. Initiatives**
+- Créer de nouvelles initiatives
+- Suivre le progrès
+- Collaborer avec l'équipe
 
-### **✅ Gestion des Projets**
-- Créer un nouveau projet
-- Modifier un projet existant
-- Supprimer un projet
-- Suivi du budget et de la progression
-- Filtrage et recherche
+### **4. Projets**
+- Gérer les projets
+- Assigner des tâches
+- Suivre les budgets
 
-### **✅ Gestion des Équipes**
-- Voir la liste des équipes
-- Voir les membres d'équipe
-- Statistiques d'équipe
+### **5. Équipe**
+- Voir la structure organisationnelle
+- Gérer les rôles
+- Collaborer
 
-### **✅ Utilisateurs**
-- Liste des utilisateurs
-- Profils détaillés
-- Statistiques par utilisateur
+## 🎯 **Fonctionnalités Clés**
 
----
+### **✅ Authentification Sécurisée**
+- JWT tokens
+- Sessions persistantes
+- Rôles et permissions
 
-## 🛠️ **COMMANDES UTILES**
+### **✅ Interface Moderne**
+- Design responsive
+- Composants shadcn/ui
+- Animations fluides
 
-### **Redémarrer l'application**
-```bash
-# Depuis la racine du projet
-npm run dev
-```
+### **✅ Base de Données**
+- SQLite avec Prisma
+- Relations complexes
+- Données de test complètes
 
-### **Gérer la base de données**
-```bash
-# Voir les données dans Prisma Studio
-cd backend && npm run db:studio
+### **✅ API RESTful**
+- Endpoints sécurisés
+- Validation des données
+- Gestion d'erreurs
 
-# Réinsérer les données de démo
-cd backend && npm run seed
+## 🎉 **Prêt à Utiliser !**
 
-# Vérifier la santé du backend
-curl http://localhost:3001/api/health
-```
+Votre application CollabFlow est maintenant **entièrement fonctionnelle** et prête à être utilisée !
 
-### **En cas de problème**
-```bash
-# Tuer tous les processus
-pkill -f "node\|vite"
+- ✅ **Frontend** : http://localhost:5173
+- ✅ **Backend** : http://localhost:3001
+- ✅ **Base de données** : Peuplée avec des données de test
+- ✅ **Authentification** : Comptes de test disponibles
 
-# Libérer les ports
-lsof -ti:3001,5173 | xargs kill -9
-
-# Redémarrer
-npm run dev
-```
-
----
-
-## 🔧 **STRUCTURE TECHNIQUE**
-
-### **Frontend**
-- **Framework** : React + TypeScript
-- **Build Tool** : Vite
-- **UI Library** : Radix UI + Tailwind CSS
-- **State Management** : React Query + Context API
-- **Validation** : Zod
-
-### **Backend**
-- **Framework** : Node.js + Express
-- **Base de données** : SQLite avec Prisma ORM
-- **Validation** : Middleware personnalisé
-- **Authentification** : Tokens JWT simulés
-
-### **Base de données**
-- **Type** : SQLite (fichier local)
-- **ORM** : Prisma
-- **Schéma** : 8 tables avec relations
-
----
-
-## 🎉 **VOTRE APPLICATION EST PRÊTE !**
-
-**Ouvrez votre navigateur et allez sur :**
-**http://localhost:5173**
-
-**Connectez-vous avec :**
-- Email : `admin@collabflow.com`
-- Mot de passe : `admin123`
-
-**Bonne utilisation de CollabFlow ! 🚀**
+**🚀 Bonne utilisation de CollabFlow !**

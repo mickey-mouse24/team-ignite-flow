@@ -94,9 +94,11 @@ export default function Team() {
     last_name: '',
     email: '',
     department: '',
-    role: 'member',
+    role: 'user',
+    status: 'available',
     phone: '',
-    location: ''
+    location: '',
+    avatar_url: ''
   });
 
   const [teamFormData, setTeamFormData] = useState({
@@ -164,20 +166,56 @@ export default function Team() {
         return;
       }
 
-      // Simuler l'ajout d'un membre (à adapter selon votre API)
-      toast.success("Membre ajouté avec succès !");
-      setIsDialogOpen(false);
-      
-      // Reset du formulaire
-      setFormData({
-        first_name: '',
-        last_name: '',
-        email: '',
-        department: '',
-        role: 'member',
-        phone: '',
-        location: ''
+      // Validation de l'email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        toast.error("Format d'email invalide");
+        return;
+      }
+
+      // Appel à l'API pour créer l'utilisateur
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          first_name: formData.first_name.trim(),
+          last_name: formData.last_name.trim(),
+          email: formData.email.trim(),
+          department: formData.department || undefined,
+          role: formData.role,
+          status: formData.status,
+          phone: formData.phone || undefined,
+          location: formData.location || undefined,
+          avatar_url: formData.avatar_url || undefined
+        })
       });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success("Membre ajouté avec succès !");
+        setIsDialogOpen(false);
+        
+        // Reset du formulaire
+        setFormData({
+          first_name: '',
+          last_name: '',
+          email: '',
+          department: '',
+          role: 'user',
+          status: 'available',
+          phone: '',
+          location: '',
+          avatar_url: ''
+        });
+        
+        // Recharger la page pour voir le nouveau membre
+        window.location.reload();
+      } else {
+        toast.error(result.message || "Une erreur est survenue lors de l'ajout du membre");
+      }
     } catch (error) {
       console.error("Erreur lors de l'ajout:", error);
       toast.error("Une erreur est survenue lors de l'ajout du membre");
@@ -217,9 +255,10 @@ export default function Team() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800 border-green-200';
-      case 'inactive': return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'available': return 'bg-green-100 text-green-800 border-green-200';
       case 'busy': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'away': return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'offline': return 'bg-gray-100 text-gray-800 border-gray-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
@@ -228,7 +267,9 @@ export default function Team() {
     switch (role) {
       case 'admin': return 'bg-red-100 text-red-800 border-red-200';
       case 'manager': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'member': return 'bg-green-100 text-green-800 border-green-200';
+      case 'developer': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'designer': return 'bg-pink-100 text-pink-800 border-pink-200';
+      case 'user': return 'bg-green-100 text-green-800 border-green-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
@@ -283,7 +324,7 @@ export default function Team() {
                     {(isLoadingUsers || isLoadingTeams) ? <Loader2 className="h-8 w-8 animate-spin" /> : users.length}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    {users.filter(u => u.status === 'active').length} actifs
+                    {users.filter(u => u.status === 'available').length} disponibles
                   </p>
                 </div>
                 <div className="h-12 w-12 bg-purple-100 rounded-xl flex items-center justify-center">
@@ -554,8 +595,10 @@ export default function Team() {
                           <SelectValue placeholder="Sélectionnez un rôle" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="member">👤 Membre</SelectItem>
+                          <SelectItem value="user">👤 Utilisateur</SelectItem>
                           <SelectItem value="manager">👨‍💼 Manager</SelectItem>
+                          <SelectItem value="developer">💻 Développeur</SelectItem>
+                          <SelectItem value="designer">🎨 Designer</SelectItem>
                           <SelectItem value="admin">👑 Admin</SelectItem>
                         </SelectContent>
                       </Select>
@@ -563,6 +606,23 @@ export default function Team() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="status" className="text-sm font-medium">
+                        Statut
+                      </Label>
+                      <Select value={formData.status} onValueChange={(value) => handleSelectChange('status', value)}>
+                        <SelectTrigger className="bg-white/80">
+                          <SelectValue placeholder="Sélectionnez un statut" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="available">🟢 Disponible</SelectItem>
+                          <SelectItem value="busy">🟡 Occupé</SelectItem>
+                          <SelectItem value="away">🟠 Absent</SelectItem>
+                          <SelectItem value="offline">⚫ Hors ligne</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
                     <div className="space-y-2">
                       <Label htmlFor="phone" className="text-sm font-medium">
                         Téléphone
@@ -575,7 +635,9 @@ export default function Team() {
                         className="bg-white/80"
                       />
                     </div>
+                  </div>
 
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="location" className="text-sm font-medium">
                         Localisation
@@ -584,6 +646,20 @@ export default function Team() {
                         id="location" 
                         placeholder="Paris, France" 
                         value={formData.location}
+                        onChange={handleInputChange}
+                        className="bg-white/80"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="avatar_url" className="text-sm font-medium">
+                        URL de l'avatar
+                      </Label>
+                      <Input 
+                        id="avatar_url" 
+                        type="url"
+                        placeholder="https://example.com/avatar.jpg" 
+                        value={formData.avatar_url}
                         onChange={handleInputChange}
                         className="bg-white/80"
                       />
